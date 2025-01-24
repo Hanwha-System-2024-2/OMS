@@ -1,44 +1,37 @@
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-
+import { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './pages/Login';
+import Stock from './pages/Stock';
+import Order from './pages/Order';
+import NotFound from './components/NotFound';
 
 function App() {
-  const [count, setCount] = useState(0)
-  const [message, setMessage] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  useEffect(() => {
-    axios.get('http://localhost:5000')
-      .then(response => setMessage(response.data))
-      .catch(error => console.error('Error fetching data:', error));
-  }, []);
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
 
   return (
-    <>
-      <div>
-        <h1>{message}</h1>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Router>
+      <Routes>
+        {/* 로그인 페이지 */}
+        <Route path="/" element={<Login onLogin={handleLogin} />} />
+        
+        {/* 종목 페이지 (로그인 후 접근 가능) */}
+        <Route path="/stock" element={isLoggedIn ? <Stock /> : <Login onLogin={handleLogin} />} />
+        
+        {/* 주문 페이지 (스톡에서 주문 버튼 클릭 시 이동) */}
+        <Route path="/order" element={isLoggedIn ? <Order /> : <Login onLogin={handleLogin} />} />
+
+        {/* 특정 종목 주문 페이지 */}
+        {/* <Route path="stock/:stockId" element={<Order />}></Route> */}
+
+        {/* 잘못된 경로 */}
+        <Route path="*" element={<NotFound />}></Route>
+      </Routes>
+    </Router>
   )
 }
 
