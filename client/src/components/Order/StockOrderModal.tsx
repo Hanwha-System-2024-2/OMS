@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { api } from "../../../utils/api";
+import api from "../../../utils/api";
 
 import CustomModal from "../../../common/modal/CustomModal";
 

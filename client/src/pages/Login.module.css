@@ -111,6 +111,11 @@ body {
   width: 100%;
 }
 
+.loginButton:focus {
+  outline: 2px solid rgba(236, 108, 13, 0.5); /* 커스텀 포커스 스타일 */
+  outline-offset: 4px; /* 테두리와 버튼 간 간격 */
+}
+
 .footer {
   display: flex;
   justify-content: center;

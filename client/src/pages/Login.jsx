@@ -1,21 +1,41 @@
 import hanwhaLogo from '../assets/hanwha.png'
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from "react-router-dom"
+import api from '../utils/api'
 import styles from './Login.module.css';
 
 
 function Login({ onLogin }) {
 
-  const handleLoginClick = () => {
-    onLogin();
-  };
-  // const [message, setMessage] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   axios.get('http://localhost:5000')
-  //     .then(response => setMessage(response.data))
-  //     .catch(error => console.error('Error fetching data:', error));
-  // }, []);
+  const handleLogin = async (e) => {
+    e.preventDefault(); // 기본 폼 동작 방지
+    try {
+      // 서버로 로그인 요청
+      const response = await api.post("/auth/login", {
+        username,
+        password,
+      });
+
+      // 로그인 성공 처리
+      if (response.data.success) {
+        console.log("로그인 성공:", response.data);
+        onLogin();
+        navigate('/stock')
+      }
+      
+    } catch (error) {
+      // 로그인 실패 처리
+      console.error("로그인 실패:", error.response?.data || error.message);
+      setErrorMessage(
+        error.response?.data?.message || "로그인 중 오류가 발생했습니다."
+      );
+    }
+  };
 
   return (
     <div className={styles.loginPage}>
@@ -41,6 +61,7 @@ function Login({ onLogin }) {
                 id="username"
                 className={styles.inputField}
                 placeholder="아이디"
+                onChange={(e) => setUsername(e.target.value)}
               />
               
               <input
@@ -48,6 +69,7 @@ function Login({ onLogin }) {
                 id="password"
                 className={styles.inputField}
                 placeholder="비밀번호"
+                onChange={(e) => setPassword(e.target.value)}
               />
               
               <div className={styles.rememberMe}>
@@ -59,7 +81,7 @@ function Login({ onLogin }) {
                 <label htmlFor="remember">아이디 저장</label>
               </div>
               
-              <button type="submit" onClick={handleLoginClick} className={styles.loginButton}>
+              <button type="submit" onClick={handleLogin} className={styles.loginButton}>
                 로그인
               </button>
             </form>

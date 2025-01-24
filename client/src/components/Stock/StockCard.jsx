@@ -1,17 +1,15 @@
 import { useQuery } from "react-query";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getStockStyle } from "../../utils/getStockStyle";
-import { api } from "../../utils/api";
+import api from "../../utils/api";
 import logoImage from "../../assets/hanwha.png"
-
 import Card from "./Card";
 // import LikeButton from "./LikeButton";
-
 import Avatar from "@mui/joy/Avatar";
 
 /** 주식종목 카드 */
 const StockCard = ({ item, size }) => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const { stockId, stockName, currentPrice, priceDifference, rateDifference } =
     item;
   const { textColor, icon } = getStockStyle(rateDifference);
@@ -25,8 +23,7 @@ const StockCard = ({ item, size }) => {
 
   // 상세조회 페이지 이동
   const handleCardClick = () => {
-    // navigate(`/stock/${stockId}`);
-    alert("상세페이지 없지롱롱")
+    navigate(`/stock/${stockId}`);
   };
 
   // Access 토큰 가져오기

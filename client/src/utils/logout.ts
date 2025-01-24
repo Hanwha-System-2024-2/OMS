@@ -1,4 +1,4 @@
-import { api } from "./api";
+import api from "./api";
 
 export const logout = async () => {
   await api.delete("/user/logout");  // Cookie 안 Refresh토큰 삭제

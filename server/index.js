@@ -1,75 +1,39 @@
+// Express 서버 메인 설정
+
+require('dotenv').config() // 환경 변수 설정정
 const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io')
 const cors = require('cors');
-const net = require("net");
+// const cookieParser = require('cookie-parser')
 
-// C 서버와 연결 설정
-const HOST = "127.0.0.1"; // C 서버의 IP 주소
-const PORT1 = 5001; // C 서버가 사용하는 포트
-
-// TCP 클라이언트를 생성
-const client = new net.Socket();
-
-// C 서버와 연결
-client.connect(PORT1, HOST, () => {
-  console.log(`Connected to C server at ${HOST}:${PORT1}`);
-  
-  // 연결되면 데이터를 보냄
-  const message = JSON.stringify({ action: "greet", message: "Hello from Node.js" });
-  client.write(message);
-});
-
-// 데이터 수신
-client.on("data", (data) => {
-  console.log("Received from C server:", data.toString());
-  
-  // 받은 데이터를 처리 후 연결 종료
-  client.end();
-});
-
-// 에러 처리
-client.on("error", (err) => {
-  console.error("Error:", err);
-});
-
-// 연결 종료 시
-client.on("close", () => {
-  console.log("Connection to C server closed");
-});
-
+const { initializeSockets } = require('./services/socketManager')
+const authRoutes = require('./routes/authRoutes');
+const stockRoutes = require('./routes/stockRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+// const { errorMiddleware } = require('./middlewares/errorMiddleware');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-const io = socketIo(server);
+const PORT = 5000;
 
-// CORS 설정
-app.use(cors());
+// CORS 설정(React(origin)와와 서버 간 통신 허용)
+app.use(cors({
+  origin: 'http://localhost:5173', // 허용할 클라이언트 주소
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // 허용할 HTTP 메서드
+  credentials: true, // 쿠키, 인증 정보 허용
+}));
 
-// 미들웨어 설정 (예: CORS 설정, JSON 파싱 등)
-app.use(express.json());
+app.use(express.json()); // JSON 데이터를 읽을 수 있도록 설정
 
-// Express 서버 기본 라우팅 설정정
-app.get('/', (req, res) => {
-  res.send('한화시스템 플젝임당당');
-});
+// Initialize sockets
+initializeSockets();
 
-// 소켓 통신 설정 (클라이언트 연결 및 이벤트 처리)
-io.on("connection", (socket) => {
-    console.log("A user connected");
-  
-    // 클라이언트로부터 메시지를 받았을 때
-    socket.on("message", (data) => {
-      console.log("Message from client: ", data);
-    });
-  
-    // 클라이언트 연결 종료 시
-    socket.on("disconnect", () => {
-      console.log("A user disconnected");
-    });
-  });
+// Routes
+app.use('/auth', authRoutes);
+// app.use('/stocks', stockRoutes);
+// app.use('/orders', orderRoutes);
 
-// 서버 시작
+// Error Handling
+// app.use(errorMiddleware);
+
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

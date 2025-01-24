@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Stock from './pages/Stock';
 import Order from './pages/Order';
+import NotFound from './components/NotFound';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -23,6 +24,12 @@ function App() {
         
         {/* 주문 페이지 (스톡에서 주문 버튼 클릭 시 이동) */}
         <Route path="/order" element={isLoggedIn ? <Order /> : <Login onLogin={handleLogin} />} />
+
+        {/* 특정 종목 주문 페이지 */}
+        {/* <Route path="stock/:stockId" element={<Order />}></Route> */}
+
+        {/* 잘못된 경로 */}
+        <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </Router>
   )

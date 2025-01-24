@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Title from "../components/Title";
-import { api } from "../utils/api";
+import api from "../utils/api";
 import CustomCircularProgress from "../components/CustomCircularProgress";
 import Nav from "../components/Nav";
 import { useQuery } from "react-query";
