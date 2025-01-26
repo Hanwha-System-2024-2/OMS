@@ -6,18 +6,11 @@ const StockOrderCard = ({
   onCancel,
   onSubmit,
   defaultValues,
+  quantity,
+  setQuantity,
 }) => {
-  // 수량과 가격 상태 관리
-  const [quantity, setQuantity] = useState(defaultValues?.quantity || 0);
-  const [price] = useState(defaultValues?.price || 0); // 가격은 고정값으로 가정
-
   // 총 금액 계산
-  const total = quantity * price;
-
-  // defaultValues.quantity가 변경될 때 quantity를 동기화
-  useEffect(() => {
-    setQuantity(defaultValues?.quantity || 0);
-  }, [defaultValues?.quantity]);
+  const total = quantity * defaultValues.price;
 
   // 동적으로 제목, 버튼 텍스트, 색상 설정 => type에 따라 받아올 수 있도록 함
   const title = labels.title || `${type} 주문`;
@@ -46,8 +39,8 @@ const StockOrderCard = ({
             type="number"
             className="border rounded-md p-2 w-32 text-center text-gray-700"
             placeholder="0"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
+            value={quantity} // 부모 상태를 사용
+            onChange={(e) => setQuantity(Number(e.target.value))} // 부모 상태 업데이트
           />
           <span className="ml-2 text-gray-700">
             {labels.quantityUnit || "주"}
@@ -60,7 +53,8 @@ const StockOrderCard = ({
             {labels.priceLabel || "주문 단가"}
           </label>
           <p className="text-gray-900 font-semibold">
-            {price.toLocaleString()} <span className="text-gray-500">원</span>
+            {defaultValues.price.toLocaleString()}{" "}
+            <span className="text-gray-500">원</span>
           </p>
         </div>
 

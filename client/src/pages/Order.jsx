@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { useQuery } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 // import { UserAuthContext } from "../../App";
 import api from "../utils/api";
 
@@ -20,10 +20,15 @@ const Order = () => {
   const navigate = useNavigate();
   const { stockId } = useParams();
 
+  const location = useLocation(); // navigate로 전달된 state 읽기
+  const { stockName } = location.state || {}; // 전달된 stockName 추출
+
   const [activeTab, setActiveTab] = useState("sell");
   // 매도와 매수 각각의 상태 관리
   const [sellQuantity, setSellQuantity] = useState(0);
   const [buyQuantity, setBuyQuantity] = useState(0);
+  const [sellPrice, setSellPrice] = useState(96400);
+  const [buyPrice, setBuyPrice] = useState(104000);
 
   const orderTypes = {
     sell: {
@@ -39,7 +44,7 @@ const Order = () => {
       },
       defaultValues: {
         quantity: sellQuantity,
-        price: 96400,
+        price: sellPrice,
       },
     },
     buy: {
@@ -55,7 +60,7 @@ const Order = () => {
       },
       defaultValues: {
         quantity: buyQuantity,
-        price: 104000,
+        price: buyPrice,
       },
     },
 
@@ -123,14 +128,20 @@ const Order = () => {
         <div>
           {/* 검색 필드 */}
           <div className="mb-6 flex items-center gap-4">
+            {/* 입력창 */}
             <input
               type="text"
-              className="border rounded-lg p-3 w-full text-gray-700"
-              placeholder="종목명 검색"
+              className="border rounded-lg px-3 py-2 w-1/5 text-gray-700"
+              placeholder={stockId}
             />
-            <button className="bg-blue-500 text-white rounded-lg w-full py-3 font-medium shadow-md hover:bg-blue-600 flex justify-center items-center">
+            {/* 버튼 */}
+            <button className="bg-blue-500 text-white rounded-lg px-4 py-2 text-sm font-medium shadow-md hover:bg-blue-600 flex-shrink-0">
               검색
             </button>
+            {/* 종목명 */}
+            <p className="text-gray-700 font-medium flex-grow text-left truncate">
+              {stockName}
+            </p>
           </div>
 
           {/* 테이블 */}
@@ -209,12 +220,16 @@ const Order = () => {
             type={activeTab}
             labels={orderTypes[activeTab].labels}
             defaultValues={orderTypes[activeTab].defaultValues}
+            quantity={activeTab === "sell" ? sellQuantity : buyQuantity} // 상태 전달
+            setQuantity={
+              activeTab === "sell" ? setSellQuantity : setBuyQuantity
+            } // 상태 업데이트 함수 전달
             onCancel={handleCancel}
-            onSubmit={(e, quantity) => {
-              handleSubmit(e, quantity);
-              // 탭별로 상태 업데이트
-              if (activeTab === "sell") setSellQuantity(quantity);
-              else if (activeTab === "buy") setBuyQuantity(quantity);
+            onSubmit={(e) => {
+              handleSubmit(
+                e,
+                activeTab === "sell" ? sellQuantity : buyQuantity
+              );
             }}
           />
         </div>
