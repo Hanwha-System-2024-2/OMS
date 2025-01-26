@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { getStockStyle } from "../../utils/getStockStyle";
 import api from "../../utils/api";
-import logoImage from "../../assets/hanwha.png"
+import logoImage from "../../assets/hanwha.png";
 import Card from "./Card";
 // import LikeButton from "./LikeButton";
 import Avatar from "@mui/joy/Avatar";
@@ -23,7 +23,9 @@ const StockCard = ({ item, size }) => {
 
   // 상세조회 페이지 이동
   const handleCardClick = () => {
-    navigate(`/stock/${stockId}`);
+    navigate(`/stock/${stockId}`, {
+      state: { stockName: stockName },
+    });
   };
 
   // Access 토큰 가져오기
@@ -49,7 +51,6 @@ const StockCard = ({ item, size }) => {
     <div className={`${width}`} onClick={handleCardClick}>
       <Card className="hover:cursor-pointer" size={size}>
         <div className="h-full flex flex-col justify-between relative">
-
           <div className="absolute right-0 top-0">
             {/* 좋아요 data가 반환되면 좋아요 버튼 활성화 */}
             {data && (
@@ -87,7 +88,6 @@ const StockCard = ({ item, size }) => {
               {Number(rateDifference).toFixed(2)}%)
             </p>
           </div>
-          
         </div>
       </Card>
     </div>
