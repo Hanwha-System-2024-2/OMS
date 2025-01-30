@@ -3,7 +3,7 @@ import { faArrowAltCircleLeft } from "@fortawesome/free-regular-svg-icons";
 import { faTrophy } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-const Title = ({ title, isTrophy, className, onClick }) => {
+const Title = ({ title, className, onClick, onLogout }) => {
   const navigate = useNavigate();
   
   return (
@@ -15,18 +15,26 @@ const Title = ({ title, isTrophy, className, onClick }) => {
         >
           {title ? title : ""}
         </div>
-        {isTrophy === true ? (
-          <FontAwesomeIcon
-            className="ml-2.5 text-first text-[24px]"
-            icon={faTrophy}
-          />
-        ) : null}
+        <FontAwesomeIcon
+          className="ml-2.5 text-first text-[24px]"
+          icon={faTrophy}
+        />
       </div>
+
+      <button
+        onClick={onLogout}
+        className={`${className} focus:outline-none focus:ring focus:ring-orange-500 cursor-pointer bg-first text-white`}
+      >
+        로그 아웃
+      </button>
+
+      {/* 뒤로가기
       <FontAwesomeIcon
         icon={faArrowAltCircleLeft}
         onClick={() => navigate(-1)}
         className={`${className} cursor-pointer text-[#1E2731] w-[36px] h-[36px]`}
-      />
+      /> */}
+
     </div>
   );
 };

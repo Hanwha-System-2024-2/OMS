@@ -7,7 +7,7 @@ import { useQuery } from "react-query";
 import StockCard from "../components/Stock/StockCard";
 import { Helmet } from "react-helmet";
 
-const Stock = () => {
+const Stock = ({onLogout}) => {
   const [stockList, setStockList] = useState([
     {
       "stockId": "001",
@@ -111,7 +111,7 @@ const Stock = () => {
         <title>{"헬멧!?"}</title>
       </Helmet> */}
       <div className="w-full h-[100%] bg-white shadow-lg rounded-md p-4">
-        <Title title="전체 종목 조회" />
+        <Title onLogout={onLogout} title="전체 종목 조회"/>
         <div className="w-full h-[90%] min-h-0 overflow-y-auto no-scrollbar">
           <div className="w-full min-h-0 grid grid-cols-3 gap-4 no-scrollbar place-items-center">
             {stockList.map((item, index) => (

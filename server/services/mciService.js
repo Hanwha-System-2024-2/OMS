@@ -1,60 +1,32 @@
-const { parseLoginResponse } = require('./protocolService');
+const { sendRequest } = require("../utils/socketManager");
+const { createLoginBuffer, parseLoginResponse } = require('../utils/protocolService');
 
-// const pendingRequests = {}; // 요청 대기 상태 저장
 let stockSubscribers = []; // 주식 정보를 받을 클라이언트 목록
 
 
-// // 로그인 요청 전송
-// function sendLoginRequest(mciSocket, buffer, requestId) {
-//     return new Promise((resolve, reject) => {
-  
-//       // pendingResponses[requestId] = { resolve, reject };
-  
-//       // 5초 타임아웃 설정
-//       // setTimeout(() => {
-//       //   if (pendingResponses[requestId]) {
-//       //     reject(new Error('Login request timed out'));
-//       //     delete pendingResponses[requestId];
-//       //   }
-//       // }, 5000);
-  
-//       mciSocket.write(buffer); // 로그인 요청 전송
-//       mciSocket.on(;data)
-//       console.log('requeset to MCI')
-//     });
-//   }
+// 로그인 요청 전송
+function sendLoginRequest(username, password) {
+  return new Promise((resolve, reject) => {
+    // 로그인 요청 전문 생성
+    const buffer = createLoginBuffer(username, password);
+
+    // sendRequest : callback함수를 pendingResponseQueue에 추가하고 mci로 요청 전송함
+    sendRequest(buffer, (response) => {
+      const result = parseLoginResponse(response);
+
+      if (result.status_code === 0) {
+        resolve({ success: true, message: "로그인에 성공했습니다." });
+      } else if (result.status_code === 1||2) {
+        resolve({ success: false, message: "잘못된 아이디나 비밀번호입니다." });
+      } else {
+        reject(new Error("잘못된 로그인 응답 코드를 받았습니다."));
+      }
+    });
+  });
+};
 
 
-// MCI로부터 응답받은 데이터 처리
-function handleMciResponse(data) {
-    tr_id = data.readInt32LE(0); // tr_id 활용 로그인/종목시세 로직 구분
-
-    if (tr_id === 4) {
-      // 로그인 응답 처리
-      const response = parseLoginResponse(data);
-      const { userId } = response;
-
-      
-
-      if (pendingResponses[requestId]) {
-        const { resolve } = pendingResponses[requestId];
-        resolve(response); // resolve() : sendLoginRequest 함수의 반환값인 Promise를 성공 상태로 전환
-        delete pendingResponses[requestId]; // 처리 후 대기열에서 제거
-        } else {
-        console.warn(`Unmatched login response for requestId ${requestId}`);
-        }
-
-
-    } else if (tr_id === 6) {
-      // 종목 시세 데이터 처리
-      // broadcastStockData(response);
-    } else {
-      console.warn('Unknown tr_id received:', tr_id);
-    }
-  };
-
-
-  // WebSocket 초기화
+// WebSocket 초기화
 function initializeWebSocket(server) {
   const WebSocket = require('ws');
   const wss = new WebSocket.Server({ server }); //웹소켓 서버 인스턴스스
@@ -82,7 +54,5 @@ function broadcastStockData(stockData) {
 
 
 module.exports = {
-  initializeWebSocket,
-  handleMciResponse,
-  // sendLoginRequest,
+  sendLoginRequest,
 };
