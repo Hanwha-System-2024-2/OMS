@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/auth': {
+      '/api': {
         target: 'http://localhost:5000', // 백엔드 서버 주소
         changeOrigin: true,
         secure: false,

@@ -1,11 +1,11 @@
 import hanwhaLogo from '../assets/hanwha.png'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom"
 import api from '../utils/api'
 import styles from './Login.module.css';
 
 
-function Login({ onLogin }) {
+function Login({onLogin}) {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,21 +16,29 @@ function Login({ onLogin }) {
     e.preventDefault(); // 기본 폼 동작 방지
     try {
       // 서버로 로그인 요청
-      const response = await api.post("/auth/login", {
+      const response = await api.post("/api/login", {
         username,
         password,
       });
 
-      // 로그인 성공 처리
-      if (response.data.success) {
+      // 응답 데이터를 구조 분해 할당
+      const { success, message } = response.data;
+
+      // 로그인 검증 후 성공 처리
+      if (success) {
+        // 로그인 성공 시 유저 정보 저장
+        const userInfo = { username };
         console.log("로그인 성공:", response.data);
-        onLogin();
+        onLogin(userInfo);
         navigate('/stock')
+      } else {
+        // 로그인 검증 후 실패 처리
+        console.log(message || "로그인에 실패했습니다.");
+        setErrorMessage(message || "로그인에 실패했습니다.");
       }
-      
     } catch (error) {
-      // 로그인 실패 처리
-      console.error("로그인 실패:", error.response?.data || error.message);
+      // 로그인 실패 처리(MCI로부터 로그인 응답을 못 받은 경우 등)
+      console.error("로그인 에러:", error.response?.data || error.message);
       setErrorMessage(
         error.response?.data?.message || "로그인 중 오류가 발생했습니다."
       );
