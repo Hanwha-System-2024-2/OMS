@@ -30,9 +30,9 @@ async function sendOrder(orderData) {
   }
 }
 
-const now = new Date();
-
-function getCurrentTimestamp(now) {
+// 현재 시간을 "YYYYMMDDHHMMSS" 형식의 14자리 문자열로 변환하는 함수
+function getCurrentTimestamp() {
+  const now = new Date();
   const year = now.getFullYear();
   const month = String(now.getMonth() + 1).padStart(2, "0"); // 1월 = 0이므로 +1 필요
   const day = String(now.getDate()).padStart(2, "0");
@@ -44,17 +44,39 @@ function getCurrentTimestamp(now) {
 }
 
 
+// 주문 시간 검증 함수 (서버 시간이 비정상적으로 설정된 경우 방지)
+function isValidOrderTime(orderTimeString) {
+  const now = new Date();
+  const currentTimestamp = now.getTime(); // 현재 시간 (밀리초)
+  const minTimestamp = currentTimestamp - 5 * 60 * 1000; // 5분 전
+  const maxTimestamp = currentTimestamp + 1 * 60 * 1000; // 1분 후
+
+  // "YYYYMMDDHHMMSS"(orderTimeString) → Date 객체 변환
+  const orderDate = new Date(
+    parseInt(orderTimeString.substring(0, 4)),  // 연도
+    parseInt(orderTimeString.substring(4, 6)) - 1,  // 월 (0부터 시작)
+    parseInt(orderTimeString.substring(6, 8)),  // 일
+    parseInt(orderTimeString.substring(8, 10)), // 시
+    parseInt(orderTimeString.substring(10, 12)), // 분
+    parseInt(orderTimeString.substring(12, 14)) // 초
+  );
+  const orderTimestamp = orderDate.getTime();
+
+  return orderTimestamp >= minTimestamp && orderTimestamp <= maxTimestamp;
+}
+
+
 /** 주식 상세정보 화면 */
 const Order = ({user, onLogout}) => {
 
   // 유효하지 않은 sotckId 주문 페이지 접근 제한
   const { stockId } = useParams();
-  if (!["000660", "005930", "035420", "272210"].includes(stockId)) return <NotFound />;
+  if (!["000660", "005930", "035420", "272210", "000004"].includes(stockId)) return <NotFound />;
 
   // 종목 정보 데이터
   const location = useLocation(); // navigate로 전달된 state 읽기
   const initialStock = location.state || {}; // 초기 값
-  const [stock, setStock] = useState(initialStock);
+  const [stock, setStock] = useState(initialStock); // 타겟 종목의 데이터
 
   const {
     stock_code,
@@ -209,7 +231,7 @@ const Order = ({user, onLogout}) => {
     return String(lastTransactionCode).padStart(6, "0"); // 6자리 유지 (앞에 0 채우기)
   }
 
-  // 주문 
+  // 주문  
   const handleSubmit = (
     e,
     quantity,
@@ -218,11 +240,45 @@ const Order = ({user, onLogout}) => {
     hogaPrice,
     ) => {
     e.preventDefault();
+
+    // 예외 처리 로직 추가
+    if (hogaPrice < 0) {
+      alert("유효하지 않은 주문가격입니다.");
+      return;
+    }
+    
+    if (quantity <= 0) {
+      alert("유효하지 않은 주문수량입니다.");
+      return;
+    }
+
+    const type_balance = activeTab === 'buy' ? buyHogaBalance : sellHogaBalance;
+    if (type_balance < quantity) {
+      alert("매도/매수 잔량을 확인해주세요.");
+      return;
+    }
+
+    if (hogaPrice > high_price || hogaPrice < low_price) {
+      alert("상한가/하한가를 확인하세요.");
+      return;
+    }
+    const order_type = activeTab === 'buy' ? "B" : "S";
+    if (!["B", "S"].includes(order_type)) {
+      alert("유효하지 않은 주문유형입니다.");
+      return;
+    }
+    const order_time = getCurrentTimestamp();
+    // 주문 시간 유효성 검사
+    if (!isValidOrderTime(order_time)) { // 주문 시간 유효성 검사
+      alert("유효하지 않은 시간입니다. 서버 시간을 확인해주세요.");
+      return;
+    }
+    
  
     const transaction_code = generateTransactionCode();
-    const order_type = (activeTab === 'buy' ? "B" : "S");
+    // const order_type = (activeTab === 'buy' ? "B" : "S");
+    // const order_time = getCurrentTimestamp(now);
     const user_id = user || 'jina';
-    const order_time = getCurrentTimestamp(now);
 
     sendOrder({
       stock_code,

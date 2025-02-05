@@ -111,7 +111,7 @@ const server = net.createServer((socket) => {
     const marketDataPacket = createMarketDataPacket();
     socket.write(marketDataPacket);
     console.log("📤 종목 시세 데이터 전송!");
-  }, 10000);
+  }, 3000);
 
   socket.on("data", (data) => {
     const tr_id = data.readInt32BE(0);

@@ -24,10 +24,10 @@ function initializeMciSockets(server) {
 
 
   // 2. MCI 주소 및 포트
-  // const mciHost = '127.0.0.1';
-  // const mciPort = 5001;
-  const mciHost = '54.180.138.183';
-  const mciPort = 8081;
+  const mciHost = '127.0.0.1';
+  const mciPort = 5001;
+  // const mciHost = '54.180.138.183';
+  // const mciPort = 8081;
   // const mciHost = '13.124.156.158';
   // const mciPort = 8082;
 
