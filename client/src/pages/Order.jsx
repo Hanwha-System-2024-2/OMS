@@ -49,7 +49,7 @@ function isValidOrderTime(orderTimeString) {
   const now = new Date();
   const currentTimestamp = now.getTime(); // 현재 시간 (밀리초)
   const minTimestamp = currentTimestamp - 5 * 60 * 1000; // 5분 전
-  const maxTimestamp = currentTimestamp + 1 * 60 * 1000; // 1분 후
+  const maxTimestamp = currentTimestamp + 1 * 60 * 1; // 1초 후
 
   // "YYYYMMDDHHMMSS"(orderTimeString) → Date 객체 변환
   const orderDate = new Date(
@@ -71,7 +71,9 @@ const Order = ({user, onLogout}) => {
 
   // 유효하지 않은 sotckId 주문 페이지 접근 제한
   const { stockId } = useParams();
-  if (!["000660", "005930", "035420", "272210", "000004"].includes(stockId)) return <NotFound />;
+  // if (!stockIdList.includes(stock_code)) {
+  //   return <NotFound />;
+  // }
 
   // 종목 정보 데이터
   const location = useLocation(); // navigate로 전달된 state 읽기
@@ -107,7 +109,7 @@ const Order = ({user, onLogout}) => {
 
     socket.on("marketData", (data) => {
       const updatedStock = data.marketData.find(s => s.stock_code === stockId);
-      console.log('updatedStock', updatedStock);
+
       if (updatedStock) {
         setStock(updatedStock);
       }
@@ -225,11 +227,11 @@ const Order = ({user, onLogout}) => {
   };
 
   // 주문 transaction_code 생성
-  let lastTransactionCode = Math.floor(Math.random() * 999999) + 1; // 마지막 사용된 transaction_code
-  function generateTransactionCode() {
-    lastTransactionCode += 1; // 이전 값에서 1 증가
-    return String(lastTransactionCode).padStart(6, "0"); // 6자리 유지 (앞에 0 채우기)
-  }
+  // let lastTransactionCode = Math.floor(Math.random() * 999999) + 1; // 마지막 사용된 transaction_code
+  // function generateTransactionCode() {
+  //   lastTransactionCode += 1; // 이전 값에서 1 증가
+  //   return String(lastTransactionCode).padStart(6, "0"); // 6자리 유지 (앞에 0 채우기)
+  // }
 
   // 주문  
   const handleSubmit = (
@@ -275,7 +277,7 @@ const Order = ({user, onLogout}) => {
     }
     
  
-    const transaction_code = generateTransactionCode();
+    // const transaction_code = generateTransactionCode();
     // const order_type = (activeTab === 'buy' ? "B" : "S");
     // const order_time = getCurrentTimestamp(now);
     const user_id = user || 'jina';
@@ -283,7 +285,7 @@ const Order = ({user, onLogout}) => {
     sendOrder({
       stock_code,
       stock_name,
-      transaction_code,
+      transaction_code: "000000", //백엔드에서 생성됨
       user_id,
       order_type,
       quantity,
@@ -326,17 +328,17 @@ const Order = ({user, onLogout}) => {
               <table className="w-full text-center border-collapse">
                 <thead>
                   <tr className="bg-gray-100 text-gray-700 text-sm">
-                    <th className="p-4">현재가</th>
-                    <th className="p-4">전일대비</th>
-                    <th className="p-4">등락률</th>
+                    <th className="p-4 w-1/3">현재가</th>
+                    <th className="p-4 w-1/3">전일대비</th>
+                    <th className="p-4 w-1/3">등락률</th>
                     {/* <th className="p-4">전일거래량</th> */}
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="text-gray-700 text-sm">
-                    <td className="p-4 text-gray-700 font-semibold">{price?.toLocaleString()}</td>
-                    <td className={`p-4 ${textColor} font-semibold`}>{icon} {change}</td>
-                    <td className={`p-4 ${textColor} font-semibold`}>{rate_of_change}</td>
+                    <td className="p-4 w-1/3 text-gray-700 font-semibold">{price?.toLocaleString()}</td>
+                    <td className={`p-4 w-1/3 ${textColor} font-semibold`}>{icon} {change}</td>
+                    <td className={`p-4 w-1/3 ${textColor} font-semibold`}>{rate_of_change}</td>
                     {/* <td className="p-4">???</td> */}
                   </tr>
                 </tbody>
@@ -345,16 +347,16 @@ const Order = ({user, onLogout}) => {
               <table className="w-full text-center border-collapse">
                 <thead>
                   <tr className="bg-gray-100 text-gray-700 text-sm">
-                    <th className="p-4">최고가</th>
-                    <th className="p-4">최저가</th>
-                    <th className="p-4">거래량</th>
+                    <th className="p-4 w-1/3">최고가</th>
+                    <th className="p-4 w-1/3">최저가</th>
+                    <th className="p-4 w-1/3">거래량</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="text-gray-700 text-sm">
-                    <td className="p-4 text-gray-700 font-semibold">{high_price?.toLocaleString()}</td>
-                    <td className="p-4 text-gray-700 font-semibold">{low_price?.toLocaleString()}</td>
-                    <td className="p-4">{Number(volume)?.toLocaleString()}</td>
+                    <td className="p-4 w-1/3 text-gray-700 font-semibold">{high_price?.toLocaleString()}</td>
+                    <td className="p-4 w-1/3 text-gray-700 font-semibold">{low_price?.toLocaleString()}</td>
+                    <td className="p-4 w-1/3 ">{Number(volume)?.toLocaleString()}</td>
                   </tr>
                 </tbody>
               </table>

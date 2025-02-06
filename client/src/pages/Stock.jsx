@@ -43,7 +43,6 @@ const Stock = ({user, onLogout}) => {
     }
   ]);
 
-
   // 종목 실시간 데이터 업데이트
   useEffect(() => {
     socket.on("marketData", (data) => {
@@ -56,18 +55,6 @@ const Stock = ({user, onLogout}) => {
     }; // useEffe1ct 정리 함수(컴포넌트가 제거될 때, 이벤트 리스너를 해제하여 메모리 누수 방지)
   }, []);
 
-
-  // 테스트용 데이터
-  const [stockList, setStockList] = useState([
-    {
-      "stockId": "001",
-      "stockName": "Samsung Electronics",
-      "currentPrice": 70000,
-      "priceDifference": "-500",
-      "rateDifference": "-0.71",
-      "liked": true
-    },
-  ]);
 
   // const { isLoading, isError } = useQuery("stock-all", async () => {
   //   const response = await api.get("/stock/showall", {

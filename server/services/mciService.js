@@ -1,6 +1,7 @@
 const net = require('net'); //MCI 서버와 TCP 소켓 통신
 const {Server} = require('socket.io') //프론트엔드와 WebSocket 통신
 const { createLoginBuffer, parseLoginResponse, parseMarketPrices, createHistoryBuffer, parseHistoryResponse } = require('../utils/protocolService');
+const { updateMarketData, getCurrentMarketData } = require("../services/marketService");
 
 let mciSocket, io;
 const pendingResponseQueue = []; // 로그인 요청-응답 매칭을 위한 큐
@@ -10,24 +11,33 @@ const pendingHistory = new Map(); // 거래내역 요청-응답 위한 Map
 // MCI서버와 TCP 연결(로그인 검증, 시세 데이터 받아오기) 및 프론트와 WebSocket 연결(시세 데이터 보내기) 설정
 function initializeMciSockets(server) {
 
-  // 1. 웹소켓 연결
+  // 1. 프론트엔드와 웹소켓 연결
   io = new Server(server, {
     cors: {
       origin: "http://localhost:5173", // 프론트엔드에서 오는 웹소켓 허용
       methods: ["GET", "POST"],
     },
   });
+
   io.on("connection", (socket) => {
     console.log("[OMS] A frontend client connected");
+
+    // 1-1. 프론트엔드가 연결되면 마지막 저장된 Market Data 즉시 전송
+    const lastMarketData = getCurrentMarketData();
+    if (Object.keys(lastMarketData).length > 0) {
+        socket.emit("marketData", lastMarketData);
+        console.log("📤 [OMS] 프론트엔드로 마지막 Market Data 전송:", lastMarketData);
+    }
+    
     socket.on("disconnect", () => console.log("[OMS] A frontend client disconnected"));
   });  // 프론트엔드가 WebSocket에 연결될 때
 
 
   // 2. MCI 주소 및 포트
-  const mciHost = '127.0.0.1';
-  const mciPort = 5001;
-  // const mciHost = '54.180.138.183';
-  // const mciPort = 8081;
+  // const mciHost = '127.0.0.1';
+  // const mciPort = 5001;
+  const mciHost = '54.180.138.183';
+  const mciPort = 8081;
   // const mciHost = '13.124.156.158';
   // const mciPort = 8082;
 
@@ -104,8 +114,9 @@ function handleLoginResponse(data) {
 
 // 종목 시세 데이터 파싱 및 브로드캐스팅
 function handleMarketData(io, data) {
-  latestMarketData = parseMarketPrices(data);
-  console.log("Broadcasting Market Data:", latestMarketData);
+  const latestMarketData = parseMarketPrices(data);
+  updateMarketData(latestMarketData); // 종목 시세 정보 업데이트
+  // console.log("Broadcasting Market Data:", latestMarketData);
   io.emit("marketData", latestMarketData); // 프론트엔드에 실시간으로 데이터 전송
 }
 

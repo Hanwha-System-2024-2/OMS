@@ -10,6 +10,7 @@ const { initializeFepSockets,  } = require("./services/fepService");
 const authController = require("./controllers/authController");
 const orderController = require("./controllers/orderController");
 const historyController = require("./controllers/historyController");
+const { saveMarketData, getCurrentMarketData } = require("./services/marketService");
 
 const app = express();
 const server = http.createServer(app); // Express 서버를 http서버로 래핑
@@ -33,4 +34,11 @@ server.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   initializeMciSockets(server);
   initializeFepSockets(server);
+});
+
+// 서버 종료 시 마지막 종목 시세 정보 저장
+process.on("SIGINT", async () => {
+  console.log("🛑 [OMS] 서버 종료 중... 마지막 Market Data 저장");
+  saveMarketData(getCurrentMarketData()); // 현재 Market Data 저장
+  process.exit();
 });

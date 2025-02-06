@@ -55,7 +55,7 @@ const StockOrderCard = ({
             {labels.priceLabel || "주문 단가"}
           </label>
           <p className="text-gray-900 font-semibold">
-            {defaultValues.price.toLocaleString()}{" "}
+            {defaultValues.price?.toLocaleString()}{" "}
             <span className="text-gray-500">원</span>
           </p>
         </div>
@@ -66,7 +66,7 @@ const StockOrderCard = ({
             {labels.totalLabel || "총 주문 금액"}
           </label>
           <p className="text-gray-900 font-semibold">
-            {total.toLocaleString()} <span className="text-gray-500">원</span>
+            {total?.toLocaleString()} <span className="text-gray-500">원</span>
           </p>
         </div>
 

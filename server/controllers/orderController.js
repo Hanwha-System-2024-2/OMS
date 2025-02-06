@@ -1,7 +1,10 @@
 const { sendOrderRequest } = require("../services/fepService");
+const { getNextTransactionCode } = require("../utils/transactionManager");
+
 
 exports.placeOrder = async (req, res) => {
   const orderData = req.body;
+  orderData.transaction_code = await getNextTransactionCode();
   console.log('orderData:', orderData);
 
   // 프론트엔드로 주문 성공/실패 응답 반환

@@ -1,0 +1,96 @@
+{
+  "marketData": [
+    {
+      "stock_code": "000001",
+      "stock_name": "삼성전자",
+      "price": 73723,
+      "volume": "124010606",
+      "change": 112,
+      "rate_of_change": "0.15%",
+      "hoga": [
+        {
+          "trading_type": 1,
+          "price": 73723,
+          "balance": 100
+        },
+        {
+          "trading_type": 2,
+          "price": 73673,
+          "balance": 200
+        }
+      ],
+      "high_price": 74223,
+      "low_price": 73223,
+      "market_time": "202502060724349"
+    },
+    {
+      "stock_code": "000002",
+      "stock_name": "SK하이닉스",
+      "price": 123822,
+      "volume": "235177800",
+      "change": -365,
+      "rate_of_change": "-0.29%",
+      "hoga": [
+        {
+          "trading_type": 1,
+          "price": 123822,
+          "balance": 100
+        },
+        {
+          "trading_type": 2,
+          "price": 123772,
+          "balance": 200
+        }
+      ],
+      "high_price": 124322,
+      "low_price": 123322,
+      "market_time": "202502060724349"
+    },
+    {
+      "stock_code": "000003",
+      "stock_name": "NAVER",
+      "price": 352292,
+      "volume": "988240273",
+      "change": -205,
+      "rate_of_change": "-0.06%",
+      "hoga": [
+        {
+          "trading_type": 1,
+          "price": 352292,
+          "balance": 100
+        },
+        {
+          "trading_type": 2,
+          "price": 352242,
+          "balance": 200
+        }
+      ],
+      "high_price": 352792,
+      "low_price": 351792,
+      "market_time": "202502060724349"
+    },
+    {
+      "stock_code": "000004",
+      "stock_name": "현대차",
+      "price": 196982,
+      "volume": "543789611",
+      "change": -381,
+      "rate_of_change": "-0.19%",
+      "hoga": [
+        {
+          "trading_type": 1,
+          "price": 196982,
+          "balance": 100
+        },
+        {
+          "trading_type": 2,
+          "price": 196932,
+          "balance": 200
+        }
+      ],
+      "high_price": 197482,
+      "low_price": 196482,
+      "market_time": "202502060724349"
+    }
+  ]
+}

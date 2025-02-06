@@ -95,7 +95,6 @@ function handleOrderResponse(data) {
   }
   const response = parseOrderResponse(data);
   console.log('response', response);
-  const tr_code = response.transaction_code
 
   console.log('pendingOrders:', pendingOrders)
   if (pendingOrders.has(tr_code)) {

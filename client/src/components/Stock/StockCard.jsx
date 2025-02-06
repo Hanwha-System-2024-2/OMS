@@ -6,9 +6,10 @@ import logoImage from "../../assets/hanwha.png";
 import Card from "./Card";
 // import LikeButton from "./LikeButton";
 import Avatar from "@mui/joy/Avatar";
+import NotFound from "../NotFound"
 
 /** 주식종목 카드 */
-const StockCard = ({ item, size }) => {
+const StockCard = ({ item, size, }) => {
   const navigate = useNavigate();
   const {
     stock_code,
