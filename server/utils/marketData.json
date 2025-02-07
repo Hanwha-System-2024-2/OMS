@@ -2,95 +2,95 @@
   "marketData": [
     {
       "stock_code": "000001",
-      "stock_name": "삼성전자",
-      "price": 73723,
-      "volume": "124010606",
-      "change": 112,
-      "rate_of_change": "0.15%",
+      "stock_name": "Stock1",
+      "price": 1000,
+      "volume": "1000",
+      "change": 0,
+      "rate_of_change": "+0.0%",
       "hoga": [
         {
           "trading_type": 1,
-          "price": 73723,
+          "price": 1000,
           "balance": 100
         },
         {
           "trading_type": 2,
-          "price": 73673,
+          "price": 1100,
           "balance": 200
         }
       ],
-      "high_price": 74223,
-      "low_price": 73223,
-      "market_time": "202502060724349"
+      "high_price": 1200,
+      "low_price": 900,
+      "market_time": "20250207001215"
     },
     {
       "stock_code": "000002",
-      "stock_name": "SK하이닉스",
-      "price": 123822,
-      "volume": "235177800",
-      "change": -365,
-      "rate_of_change": "-0.29%",
+      "stock_name": "Stock2",
+      "price": 1100,
+      "volume": "2000",
+      "change": 10,
+      "rate_of_change": "+1.0%",
       "hoga": [
         {
           "trading_type": 1,
-          "price": 123822,
+          "price": 1010,
           "balance": 100
         },
         {
           "trading_type": 2,
-          "price": 123772,
+          "price": 1110,
           "balance": 200
         }
       ],
-      "high_price": 124322,
-      "low_price": 123322,
-      "market_time": "202502060724349"
+      "high_price": 1210,
+      "low_price": 910,
+      "market_time": "20250207001215"
     },
     {
       "stock_code": "000003",
-      "stock_name": "NAVER",
-      "price": 352292,
-      "volume": "988240273",
-      "change": -205,
-      "rate_of_change": "-0.06%",
+      "stock_name": "Stock3",
+      "price": 1200,
+      "volume": "3000",
+      "change": 20,
+      "rate_of_change": "+2.0%",
       "hoga": [
         {
           "trading_type": 1,
-          "price": 352292,
+          "price": 1020,
           "balance": 100
         },
         {
           "trading_type": 2,
-          "price": 352242,
+          "price": 1120,
           "balance": 200
         }
       ],
-      "high_price": 352792,
-      "low_price": 351792,
-      "market_time": "202502060724349"
+      "high_price": 1220,
+      "low_price": 920,
+      "market_time": "20250207001215"
     },
     {
       "stock_code": "000004",
-      "stock_name": "현대차",
-      "price": 196982,
-      "volume": "543789611",
-      "change": -381,
-      "rate_of_change": "-0.19%",
+      "stock_name": "Stock4",
+      "price": 1300,
+      "volume": "4000",
+      "change": 30,
+      "rate_of_change": "+3.0%",
       "hoga": [
         {
           "trading_type": 1,
-          "price": 196982,
+          "price": 1030,
           "balance": 100
         },
         {
           "trading_type": 2,
-          "price": 196932,
+          "price": 1130,
           "balance": 200
         }
       ],
-      "high_price": 197482,
-      "low_price": 196482,
-      "market_time": "202502060724349"
+      "high_price": 1230,
+      "low_price": 930,
+      "market_time": "20250207001215"
     }
   ]
 }

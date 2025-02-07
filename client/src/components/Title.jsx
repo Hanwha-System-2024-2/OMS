@@ -5,6 +5,12 @@ import { useNavigate } from "react-router-dom";
 
 const Title = ({ title, className, onClick, onLogout }) => {
   const navigate = useNavigate();
+
+
+  function handleLogout() {
+    onLogout();
+    navigate('/');
+  }
   
   return (
     <div className="w-full flex justify-between items-center mb-6">
@@ -22,7 +28,7 @@ const Title = ({ title, className, onClick, onLogout }) => {
       </div>
 
       <button
-        onClick={onLogout}
+        onClick={handleLogout}
         className={`${className} focus:outline-none focus:ring focus:ring-orange-500 cursor-pointer bg-first text-white`}
       >
         로그 아웃

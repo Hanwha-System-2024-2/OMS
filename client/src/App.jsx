@@ -38,14 +38,14 @@ function App() {
         
         {/* 종목 페이지 (로그인 후 접근 가능) */}
         {/* <Route path="/stock" element={user ? <Stock onLogout={handleLogout} /> : <Login onLogin={handleLogin} />} /> */}
-        <Route path="/stock" element={<Stock user={user} onLogout={handleLogout} /> } />
+        <Route path="/stock" element={<Stock user={user.username} onLogout={handleLogout} /> } />
         
         {/* 주문 페이지 (스톡에서 주문 버튼 클릭 시 이동) */}
         {/* <Route path="/order" element={user ? <Order/> : <Login onLogin={handleLogin} />} /> */}
-        <Route path="/order" element={ <Order user={user.username} /> } />
+        <Route path="/order" element={<Order user={user.username} onLogout={handleLogout} /> } />
 
         {/* 특정 종목 주문 페이지 */}
-        <Route path="stock/:stockId" element={<Order user={user.username} />} />
+        <Route path="stock/:stockId" element={<Order user={user.username} onLogout={handleLogout} />} />
 
         {/* 잘못된 경로 */}
         <Route path="*" element={<NotFound />}></Route>
